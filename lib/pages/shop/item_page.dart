@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'feedbacks_item_page.dart';
+import '../../router/home_router/home_router_delegate.dart';
 
 class ItemPage extends StatelessWidget {
   final int itemId;
@@ -23,12 +23,8 @@ class ItemPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FeedbacksItemPage(itemId: itemId),
-                  ),
-                );
+                // Используем HomeRouterDelegate для навигации
+                HomeRouterDelegate.of(context).goToItemFeedback(itemId);
               },
               child: const Text('Отзывы'),
             ),

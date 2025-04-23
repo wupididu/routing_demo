@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with ChangeNotifier {
-  AuthService();
+  static const _isLoggindKey = 'is_loggined';
 
-  // Authentication state
-  bool _isLoggedIn = false;
+  final SharedPreferences _preferences;
+
+  AuthService(this._preferences);
 
   // Getter for current state
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoggedIn => _preferences.getBool(_isLoggindKey) ?? false;
 
   // Login method
-  void login() {
-    _isLoggedIn = true;
+  Future<void> login() async {
+    await _preferences.setBool(_isLoggindKey, true);
     notifyListeners();
   }
 
   // Logout method
-  void logout() {
-    _isLoggedIn = false;
+  Future<void> logout() async {
+    await _preferences.setBool(_isLoggindKey, false);
     notifyListeners();
   }
 }

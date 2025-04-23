@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shop/item_page.dart';
+import '../../router/home_router/home_router_delegate.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -17,12 +17,8 @@ class CartPage extends StatelessWidget {
             subtitle: Text('Количество: ${index + 1}'),
             trailing: Text('${itemId * 100 * (index + 1)} руб.'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemPage(itemId: itemId),
-                ),
-              );
+              // Используем HomeRouterDelegate для навигации
+              HomeRouterDelegate.of(context).goToItem(itemId);
             },
           );
         },

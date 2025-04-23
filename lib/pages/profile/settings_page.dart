@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:routing_demo/router/home_router/home_router_delegate.dart';
+
+bool _notificationsEnabled = true;
+bool _darkModeEnabled = false;
+String _selectedLanguage = 'Русский';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -8,10 +13,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
-  String _selectedLanguage = 'Русский';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
             subtitle: Text(_selectedLanguage),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
-              _showLanguageDialog();
+              HomeRouterDelegate.of(context).goToLanguage();
             },
           ),
           const Divider(),
@@ -53,72 +54,64 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('О приложении'),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
-              _showAboutDialog();
+              HomeRouterDelegate.of(context).goToAbout();
             },
           ),
         ],
       ),
     );
   }
+}
 
-  void _showLanguageDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: const Text('Выберите язык'),
-          children: [
-            SimpleDialogOption(
-              onPressed: () {
-                setState(() {
-                  _selectedLanguage = 'Русский';
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('Русский'),
-            ),
-            SimpleDialogOption(
-              onPressed: () {
-                setState(() {
-                  _selectedLanguage = 'English';
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('English'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+class SettingsLanguageDialog extends StatelessWidget {
+  const SettingsLanguageDialog({super.key});
 
-  void _showAboutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('О приложении'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Демо приложение для навигации'),
-              SizedBox(height: 8),
-              Text('Версия: 1.0.0'),
-              SizedBox(height: 8),
-              Text('© 2025 Все права защищены'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Закрыть'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  @override
+  Widget build(BuildContext context) => SimpleDialog(
+    title: const Text('Выберите язык'),
+    children: [
+      SimpleDialogOption(
+        onPressed: () {
+          _selectedLanguage = 'Русский';
+          Navigator.pop(context);
+        },
+        child: const Text('Русский'),
+      ),
+      SimpleDialogOption(
+        onPressed: () {
+          _selectedLanguage = 'English';
+          Navigator.pop(context);
+        },
+        child: const Text('English'),
+      ),
+    ],
+  );
+}
+
+class SettingsAboutDialog extends StatelessWidget {
+  const SettingsAboutDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: const Text('О приложении'),
+    content: const Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Демо приложение для навигации'),
+        SizedBox(height: 8),
+        Text('Версия: 1.0.0'),
+        SizedBox(height: 8),
+        Text('© 2025 Все права защищены'),
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text('Закрыть'),
+      ),
+    ],
+  );
 }
