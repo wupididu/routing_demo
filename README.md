@@ -1,30 +1,16 @@
-# Приложение для демонтстрации работы с навигацией
+# DeepLinks 
 
-Приложение, похожее на интернет магазин
-Навигация следующего вида
-@startuml
-[*] --> LoginPage
-[*] --> HomePage
+```bash
+> adb shell 'am start -a android.intent.action.VIEW \
+-c android.intent.category.BROWSABLE \
+-d "routingdemo://open.my.app/home/cart"' \
+com.example.routing_demo
 
-LoginPage --> RegisterPage
+> adb shell 'am start -a android.intent.action.VIEW \
+-c android.intent.category.BROWSABLE \
+-d "https://routingdemo.example.com/home/shop/item/"' \
+com.example.routing_demo
 
-HomePage --> ShopPage
-HomePage --> CartPage
-HomePage --> ProfilePage
 
-ShopPage --> ItemPage
-CartPage --> ItemPage
-ItemPage --> FeedbacksItemPage
-
-ProfilePage --> OrdersPage
-ProfilePage --> SettingsPage
-@enduml
-
-HomePage - это страница с боттомшит наигацией табами ShopPage, CartPage и ProfilePage
-ShopPage, CartPage и ProfilePage - это вложенная навигация. Используй для этого вложенный Navigator
-
-LoginPage должен открываться автоматически, если пользователь разлогинен
-
-Используй для навигации Navigator 1.0
-Экраны должны быть супер простые.
-Код должен быть минималистичен и читаем. Не пиши много кода
+> xcrun simctl openurl booted routingdemo://open.my.app/home/shop
+```

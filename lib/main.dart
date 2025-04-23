@@ -1,13 +1,29 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:routing_demo/di.dart';
-import 'auth/auth_service.dart';
-import 'pages/login_page.dart';
-import 'pages/register_page.dart';
-import 'pages/home_page.dart';
+import 'package:routing_demo/router/app_router/route_information_parser.dart';
+import 'package:routing_demo/router/app_router/router_delegate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'router/app_router/app_route.dart';
+import 'router/app_router/app_router_state_manager.dart';
 
-void main() {
-  runApp(const DI(child: MyApp()));
+void main() async {
+  Logger.root.onRecord.listen((event) {
+    print('${event.loggerName} | ${event.level} | ${event.message}');
+  });
+
+  Provider.debugCheckInvalidValueType = null;
+
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final sharedPreferences = await SharedPreferences.getInstance();
+  runApp(DI(sharedPreferences: sharedPreferences, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,34 +31,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Навигация Демо',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      onGenerateRoute: (settings) {
-        // Проверка авторизации для всех маршрутов, кроме login и register
-        if (!authService.isLoggedIn &&
-            settings.name != '/login' &&
-            settings.name != '/register') {
-          return MaterialPageRoute(builder: (context) => const LoginPage());
-        }
-
-        return switch (settings.name) {
-          '/login' => MaterialPageRoute(
-            builder: (context) => const LoginPage(),
+      routerConfig: RouterConfig<AppRoute>(
+        routerDelegate: AppRouterDelegate(
+          context.read<AppRouterStateManager>(),
+        ),
+        routeInformationParser: AppRouteInformationParser(),
+        routeInformationProvider: PlatformRouteInformationProvider(
+          initialRouteInformation: RouteInformation(
+            uri: Uri.parse(
+              WidgetsBinding.instance.platformDispatcher.defaultRouteName,
+            ),
           ),
-          '/register' => MaterialPageRoute(
-            builder: (context) => const RegisterPage(),
-          ),
-          '/home' => MaterialPageRoute(builder: (context) => const HomePage()),
-          '/' => MaterialPageRoute(builder: (context) => const HomePage()),
-          _ => throw UnimplementedError(),
-        };
-      },
+        ),
+        backButtonDispatcher: RootBackButtonDispatcher(),
+      ),
     );
   }
 }

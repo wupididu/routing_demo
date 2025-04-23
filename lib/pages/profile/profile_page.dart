@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../auth/auth_service.dart';
-import 'orders_page.dart';
-import 'settings_page.dart';
+import '../../router/home_router/home_router_delegate.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -23,20 +22,16 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const OrdersPage()),
-                );
+                // Используем HomeRouterDelegate для навигации
+                HomeRouterDelegate.of(context).goToOrders();
               },
               child: const Text('Мои заказы'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsPage()),
-                );
+                // Используем HomeRouterDelegate для навигации
+                HomeRouterDelegate.of(context).goToSettings();
               },
               child: const Text('Настройки'),
             ),
@@ -44,12 +39,8 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // Просто вызываем logout(), навигация произойдет автоматически
-                // благодаря реактивному слушателю в MyApp
+                // благодаря реактивному слушателю в NavGuard
                 Provider.of<AuthService>(context, listen: false).logout();
-                Navigator.of(
-                  context,
-                  rootNavigator: true,
-                ).pushReplacementNamed('/login');
               },
               child: const Text('Выйти'),
             ),

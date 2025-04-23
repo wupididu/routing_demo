@@ -2,7 +2,8 @@
     <application
         android:label="routing_demo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -23,6 +24,25 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            
+            <!-- Deep Link handling -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Custom URI scheme -->
+                <data android:scheme="routingdemo" android:host="open.my.app" />
+            </intent-filter>
+            
+            <!-- Universal Links / App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- HTTP scheme for web URLs that should open this app -->
+                <data android:scheme="http" android:host="routingdemo.example.com" />
+                <data android:scheme="https" android:host="routingdemo.example.com" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
+import '../router/app_router/router_delegate.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -22,14 +23,15 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 // Получаем AuthService через Provider и вызываем login()
                 Provider.of<AuthService>(context, listen: false).login();
-                Navigator.of(context).pushReplacementNamed('/home');
+                // Навигация произойдет автоматически благодаря NavGuard
               },
               child: const Text('Войти'),
             ),
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/register');
+                // Используем RouterDelegate для навигации
+                AppRouterDelegate.of(context).goToRegister();
               },
               child: const Text('Регистрация'),
             ),
