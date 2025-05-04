@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:routing_demo/auth/auth_service.dart';
-import 'package:routing_demo/router/app_router/app_router_interceptor.dart';
-import 'package:routing_demo/router/app_router/app_router_mutator.dart';
-import 'package:routing_demo/router/app_router/app_router_state_manager.dart';
-import 'package:routing_demo/router/app_router/route_information_parser.dart';
-import 'package:routing_demo/router/home_router/home_route_information_parser.dart';
-import 'package:routing_demo/router/home_router/home_router_state_manager.dart';
+import 'package:routing_demo/router/app_router/app_router.dart';
+import 'package:routing_demo/router/app_router_refresher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DI extends StatelessWidget {
@@ -20,44 +17,19 @@ class DI extends StatelessWidget {
       Provider<AuthService>(
         create: (context) => AuthService(sharedPreferences),
       ),
-      Provider<AppRouteInformationParser>(
-        create: (context) => AppRouteInformationParser(),
-      ),
+      Provider<GoRouter>(create: (context) => appRouter),
     ],
     child: MultiProvider(
       providers: [
-        Provider<AppRouterStateManager>(
+        Provider(
           create:
-              (context) => AppRouterStateManager(
-                state: context.read<AppRouteInformationParser>().initialState,
-                interceptor: AppRouterInterceptor(
-                  authService: context.read<AuthService>(),
-                ),
-                mutator: AppRouterMutator(
-                  authService: context.read<AuthService>(),
-                ),
+              (context) => AppRouterRefresher(
+                authService: context.read(),
+                appRouter: context.read(),
               )..init(),
         ),
       ],
-      child: MultiProvider(
-        providers: [
-          Provider<HomeRouterStateManager>(
-            create:
-                (context) =>
-                    context
-                        .read<AppRouterStateManager>()
-                        .homeRouterStateManager,
-          ),
-          Provider<HomeRouteInformationParser>(
-            create:
-                (context) =>
-                    context
-                        .read<AppRouteInformationParser>()
-                        .homeRouteInformationParser,
-          ),
-        ],
-        child: child,
-      ),
+      child: child,
     ),
   );
 }

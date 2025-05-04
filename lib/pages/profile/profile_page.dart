@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../auth/auth_service.dart';
-import '../../router/home_router/home_router_delegate.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -22,16 +22,14 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                // Используем HomeRouterDelegate для навигации
-                HomeRouterDelegate.of(context).goToOrders();
+                context.goNamed('orders');
               },
               child: const Text('Мои заказы'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                // Используем HomeRouterDelegate для навигации
-                HomeRouterDelegate.of(context).goToSettings();
+                context.goNamed('settings');
               },
               child: const Text('Настройки'),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
-import '../router/app_router/router_delegate.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -30,8 +30,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                // Используем RouterDelegate для навигации
-                AppRouterDelegate.of(context).goToRegister();
+                context.goNamed('register');
               },
               child: const Text('Регистрация'),
             ),

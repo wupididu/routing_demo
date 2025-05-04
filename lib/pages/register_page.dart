@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
-import '../router/app_router/router_delegate.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -30,8 +30,7 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                // Используем RouterDelegate для навигации назад
-                AppRouterDelegate.of(context).popRoute();
+                context.goNamed('login');
               },
               child: const Text('Назад ко входу'),
             ),

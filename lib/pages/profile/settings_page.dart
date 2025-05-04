@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:routing_demo/router/home_router/home_router_delegate.dart';
+import 'package:go_router/go_router.dart';
 
 bool _notificationsEnabled = true;
 bool _darkModeEnabled = false;
@@ -46,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
             subtitle: Text(_selectedLanguage),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
-              HomeRouterDelegate.of(context).goToLanguage();
+              context.goNamed('language');
             },
           ),
           const Divider(),
@@ -54,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('О приложении'),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
-              HomeRouterDelegate.of(context).goToAbout();
+              context.goNamed('about');
             },
           ),
         ],

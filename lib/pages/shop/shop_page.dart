@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../router/home_router/home_router_delegate.dart';
+import 'package:go_router/go_router.dart';
 
 class ShopPage extends StatelessWidget {
   const ShopPage({super.key});
@@ -15,8 +15,10 @@ class ShopPage extends StatelessWidget {
             title: Text('Товар ${index + 1}'),
             subtitle: Text('Описание товара ${index + 1}'),
             onTap: () {
-              // Используем HomeRouterDelegate для навигации
-              HomeRouterDelegate.of(context).goToItem(index + 1);
+              context.goNamed(
+                'shop_item',
+                pathParameters: {'item_id': (index + 1).toString()},
+              );
             },
           );
         },

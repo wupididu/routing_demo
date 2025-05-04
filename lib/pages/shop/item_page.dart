@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../router/home_router/home_router_delegate.dart';
+import 'package:go_router/go_router.dart';
 
 class ItemPage extends StatelessWidget {
   final int itemId;
+  final String prefix;
 
-  const ItemPage({super.key, required this.itemId});
+  const ItemPage({super.key, required this.itemId, required this.prefix});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +24,10 @@ class ItemPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Используем HomeRouterDelegate для навигации
-                HomeRouterDelegate.of(context).goToItemFeedback(itemId);
+                context.goNamed(
+                  '${prefix}_feedback',
+                  pathParameters: {'item_id': itemId.toString()},
+                );
               },
               child: const Text('Отзывы'),
             ),

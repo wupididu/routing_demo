@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:routing_demo/di.dart';
-import 'package:routing_demo/router/app_router/route_information_parser.dart';
-import 'package:routing_demo/router/app_router/router_delegate.dart';
+import 'package:routing_demo/router/app_router_refresher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'router/app_router/app_route.dart';
-import 'router/app_router/app_router_state_manager.dart';
 
 void main() async {
   Logger.root.onRecord.listen((event) {
@@ -31,26 +29,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AppRouterRefresher>();
     return MaterialApp.router(
       title: 'Навигация Демо',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      routerConfig: RouterConfig<AppRoute>(
-        routerDelegate: AppRouterDelegate(
-          context.read<AppRouterStateManager>(),
-        ),
-        routeInformationParser: AppRouteInformationParser(),
-        routeInformationProvider: PlatformRouteInformationProvider(
-          initialRouteInformation: RouteInformation(
-            uri: Uri.parse(
-              WidgetsBinding.instance.platformDispatcher.defaultRouteName,
-            ),
-          ),
-        ),
-        backButtonDispatcher: RootBackButtonDispatcher(),
-      ),
+      routerConfig: Provider.of<GoRouter>(context),
     );
   }
 }
